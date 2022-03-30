@@ -22,16 +22,22 @@ class MyHomePage extends StatelessWidget {
           title: const Text('Flutter App'),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Container(
-                width: double.infinity,
+            // ignore: sized_box_for_whitespace
+            Container(
+              width: double.infinity,
+              child: const Card(
                 color: Colors.blue,
-                child: const Text('Chart'),
+                child: Text('Chart'),
+                elevation: 8,
               ),
-              elevation: 8,
             ),
-            Card(child: Text('List of TX!'))
+            const Card(
+              child: Text('List of TX!'),
+              color: Colors.red,
+            )
           ],
         ));
   }
