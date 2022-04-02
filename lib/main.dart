@@ -1,5 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import './transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,18 +34,12 @@ class MyHomePage extends StatelessWidget {
       amount: 4999.90,
       date: DateTime.now(),
     ),
-    Transaction(
+    /*Transaction(
       id: 'r3',
       title: 'New Jeans',
       amount: 1099.00,
       date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'r4',
-      title: 'Rough Copy',
-      amount: 40.00,
-      date: DateTime.now(),
-    )
+    ),*/
   ];
 
   @override
@@ -52,7 +49,7 @@ class MyHomePage extends StatelessWidget {
           title: const Text('Flutter App'),
         ),
         body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // ignore: sized_box_for_whitespace
@@ -64,26 +61,61 @@ class MyHomePage extends StatelessWidget {
                   elevation: 8,
                 ),
               ),
+              Card(
+                elevation: 5,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const TextField(
+                        decoration: InputDecoration(labelText: 'Title'),
+                      ),
+                      const TextField(
+                        decoration: InputDecoration(labelText: 'Amount'),
+                      ),
+                      FlatButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Add Transaction',
+                            style: TextStyle(color: Colors.blue),
+                          ))
+                    ],
+                  ),
+                ),
+              ),
               Column(
                 children: transactions.map((tx) {
                   return Card(
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               vertical: 12, horizontal: 12),
                           decoration: BoxDecoration(
                               border: Border.all(
-                            color: Colors.deepPurple,
+                            color: Colors.red,
                             width: 2,
                           )),
-                          padding: EdgeInsets.all(10),
-                          child: Text(tx.amount.toString()),
+                          padding: const EdgeInsets.all(10),
+                          child: Text('\u{20B9}${tx.amount}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.red)),
                         ),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(tx.title),
-                            Text(tx.date.toString()),
+                            Text(
+                              tx.title,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            Text(
+                              DateFormat.yMMMd().format(tx.date),
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ],
                         )
                       ],
