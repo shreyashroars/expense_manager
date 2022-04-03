@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 // ignore: use_key_in_widget_constructors
@@ -7,6 +9,17 @@ class NewTransaction extends StatelessWidget {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
   NewTransaction(this.addTx);
+
+  void SubmitData() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.parse(amountController.text);
+    if (enteredTitle.isEmpty || enteredAmount <= 0) return;
+    addTx(
+      enteredTitle,
+      enteredAmount,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -20,11 +33,20 @@ class NewTransaction extends StatelessWidget {
               decoration: const InputDecoration(labelText: 'Title'),
               //onChanged: (value) => titleValue = value,
               controller: titleController,
+              onSubmitted: (_) {
+                SubmitData();
+              },
             ),
             TextField(
               decoration: const InputDecoration(labelText: 'Amount'),
+
               // onChanged: (value) => amountValue = value,
               controller: amountController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (_) {
+                SubmitData();
+              },
             ),
             //Note: here addTx is a pointer to the function _addNewTransaction method
             //of the _UserTransaction class. This is req. bcos both the method and class
@@ -33,10 +55,7 @@ class NewTransaction extends StatelessWidget {
             // pointer and then pass it to a constructor and then we can use it anywhere inside
             //this class
             FlatButton(
-                onPressed: () {
-                  addTx(titleController.text,
-                      double.parse(amountController.text));
-                },
+                onPressed: SubmitData,
                 child: const Text(
                   'Add Transaction',
                   style: TextStyle(color: Colors.blue),
