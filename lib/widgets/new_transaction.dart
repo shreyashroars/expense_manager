@@ -1,20 +1,26 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 // ignore: use_key_in_widget_constructors
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   //const NewTransaction({ Key? key }) : super(key: key);
   final Function addTx;
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+
   NewTransaction(this.addTx);
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
 
   void SubmitData() {
     final enteredTitle = titleController.text;
     final enteredAmount = double.parse(amountController.text);
     if (enteredTitle.isEmpty || enteredAmount <= 0) return;
-    addTx(
+    widget.addTx(
       enteredTitle,
       enteredAmount,
     );
