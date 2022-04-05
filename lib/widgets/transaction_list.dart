@@ -1,62 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-//  .. means to go up a subbfolder in the same folder
+
 import '../models/transaction.dart';
 
-// ignore: use_key_in_widget_constructors
 class TransactionList extends StatelessWidget {
-  //const TransactionList({ Key? key }) : super(key: key);
-
-  List<Transaction> transactions;
-
-  // ignore: use_key_in_widget_constructors
+  final List<Transaction> transactions;
 
   TransactionList(this.transactions);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 300,
       child: ListView.builder(
-        itemCount: transactions.length,
-        itemBuilder: (context, index) {
+        itemBuilder: (ctx, index) {
           return Card(
             child: Row(
-              children: [
+              children: <Widget>[
                 Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  margin: EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 15,
+                  ),
                   decoration: BoxDecoration(
-                      border: Border.all(
-                    color: Colors.red,
-                    width: 2,
-                  )),
-                  padding: const EdgeInsets.all(10),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor,
+                      width: 2,
+                    ),
+                  ),
+                  padding: EdgeInsets.all(10),
                   child: Text(
-                      '\u{20B9}${transactions[index].amount.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.red)),
+                    '\$${transactions[index].amount.toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     Text(
                       transactions[index].title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       DateFormat.yMMMd().format(transactions[index].date),
-                      style: const TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           );
         },
+        itemCount: transactions.length,
       ),
     );
   }

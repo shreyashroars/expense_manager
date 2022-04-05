@@ -1,108 +1,112 @@
-// ignore_for_file: deprecated_member_use
-
-//import './models/transaction.dart';
-import 'package:expense_manager/widgets/new_transaction.dart';
-import 'package:expense_manager/widgets/transaction_list.dart';
-
 import 'package:flutter/material.dart';
 
-import 'models/transaction.dart';
+import './widgets/new_transaction.dart';
+import './widgets/transaction_list.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
-// ignore: use_key_in_widget_constructors
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Personal Expenses',
+      theme: ThemeData(
+        fontFamily: 'QuickSand',
+        appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 20,
+                fontWeight: FontWeight.normal)),
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+      ),
       home: MyHomePage(),
     );
   }
 }
 
-// ignore: use_key_in_widget_constructors
 class MyHomePage extends StatefulWidget {
+  // String titleInput;
+  // String amountInput;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransaction = [
+  final List<Transaction> _userTransactions = [
     Transaction(
-      id: 'r1',
-      title: 'New Shirt',
-      amount: 799.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'r2',
+      id: 't1',
       title: 'New Shoes',
-      amount: 4999.90,
+      amount: 69.99,
       date: DateTime.now(),
     ),
-    /*Transaction(
-      id: 'r3',
-      title: 'New Jeans',
-      amount: 1099.00,
+    Transaction(
+      id: 't2',
+      title: 'Weekly Groceries',
+      amount: 16.53,
       date: DateTime.now(),
-    ),*/
+    ),
   ];
-  void _addNewTransaction(String txtitle, double txamount) {
+
+  void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
-        id: DateTime.now().toString(),
-        title: txtitle,
-        amount: txamount,
-        date: DateTime.now());
+      title: txTitle,
+      amount: txAmount,
+      date: DateTime.now(),
+      id: DateTime.now().toString(),
+    );
 
     setState(() {
-      _userTransaction.add(newTx);
+      _userTransactions.add(newTx);
     });
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
-        context: ctx,
-        builder: (_) {
-          return GestureDetector(
-            onTap: () {},
-            child: NewTransaction(_addNewTransaction),
-            behavior: HitTestBehavior.opaque,
-          );
-        });
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () {},
+          child: NewTransaction(_addNewTransaction),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter App'),
-        actions: [
+        title: Text('Personal Expenses'),
+        actions: <Widget>[
           IconButton(
-              onPressed: () => _startAddNewTransaction(context),
-              icon: Icon(Icons.add_sharp))
+            icon: Icon(Icons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // ignore: sized_box_for_whitespace
-              Container(
-                width: double.infinity,
-                child: const Card(
-                  color: Colors.blue,
-                  child: Text('Chart'),
-                  elevation: 8,
-                ),
+          // mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              child: Card(
+                color: Colors.blue,
+                child: Text('CHART!'),
+                elevation: 5,
               ),
-              TransactionList(_userTransaction),
-            ]),
+            ),
+            TransactionList(_userTransactions),
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
         onPressed: () => _startAddNewTransaction(context),
       ),
     );
