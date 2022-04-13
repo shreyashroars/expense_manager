@@ -52,59 +52,67 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: const InputDecoration(labelText: 'Title'),
-              controller: _titleController,
-              onSubmitted: (_) => _submitData(),
-              // onChanged: (val) {
-              //   titleInput = val;
-              // },
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Amount'),
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) => _submitData(),
-              // onChanged: (val) => amountInput = val,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(selectedDate == null
-                      ? 'No Date Chosen'
-                      : 'Chosen Date : ' +
-                          DateFormat.yMd().format(selectedDate)),
-                ),
-                TextButton(
-                  child: const Text(
-                    'Choose Date',
-                    style: TextStyle(
-                        color: Colors.purple, fontWeight: FontWeight.bold),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                decoration: const InputDecoration(labelText: 'Title'),
+                controller: _titleController,
+                onSubmitted: (_) => _submitData(),
+                // onChanged: (val) {
+                //   titleInput = val;
+                // },
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Amount'),
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) => _submitData(),
+                // onChanged: (val) => amountInput = val,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(selectedDate == null
+                        ? 'No Date Chosen'
+                        : 'Chosen Date : ' +
+                            DateFormat.yMd().format(selectedDate)),
                   ),
-                  onPressed: _presentDatePicker,
-                )
-              ],
-            ),
-            ElevatedButton(
-              child: const Text('Add Transaction'),
-              style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                  ),
-                  primary: Theme.of(context).primaryColor),
+                  TextButton(
+                    child: const Text(
+                      'Choose Date',
+                      style: TextStyle(
+                          color: Colors.purple, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: _presentDatePicker,
+                  )
+                ],
+              ),
+              ElevatedButton(
+                child: const Text('Add Transaction'),
+                style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    primary: Theme.of(context).primaryColor),
 
-              //color: Theme.of(context).primaryColor,
-              //textColor: Colors.white,
-              onPressed: _submitData,
-            ),
-          ],
+                //color: Theme.of(context).primaryColor,
+                //textColor: Colors.white,
+                onPressed: _submitData,
+              ),
+            ],
+          ),
         ),
       ),
     );
