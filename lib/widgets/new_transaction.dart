@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:expense_manager/widgets/adaptive_text_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -89,14 +93,7 @@ class _NewTransactionState extends State<NewTransaction> {
                         : 'Chosen Date : ' +
                             DateFormat.yMd().format(selectedDate)),
                   ),
-                  TextButton(
-                    child: const Text(
-                      'Choose Date',
-                      style: TextStyle(
-                          color: Colors.purple, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: _presentDatePicker,
-                  )
+                  AdaptiveTextButton(_presentDatePicker),
                 ],
               ),
               ElevatedButton(
