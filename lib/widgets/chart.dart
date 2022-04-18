@@ -33,14 +33,17 @@ class Chart extends StatelessWidget {
 
   double get totalSpending {
     return groupedTransactionValues.fold(0.0, (sum, item) {
-      return sum + item['amount'];
+      return sum + (item['amount']);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6,
+      shape: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.purple, width: 1)),
+      elevation: 10,
       margin: EdgeInsets.all(20),
       child: Padding(
         padding: EdgeInsets.all(10),
