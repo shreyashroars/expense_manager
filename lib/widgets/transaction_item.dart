@@ -60,12 +60,13 @@ class _TransactionItemState extends State<TransactionItem> {
         ),
         subtitle: Text(DateFormat.yMMMd().format(widget.transaction.date)),
         trailing: MediaQuery.of(context).size.width > 360
-            ? FlatButton.icon(
+            ? TextButton.icon(
                 onPressed: () => widget.deltx(widget.transaction.id),
                 icon: const Icon(Icons.delete_rounded),
-                label: const Text('Delete'),
-                textColor: Theme.of(context).errorColor,
-              )
+                label: Text(
+                  'Delete',
+                  style: TextStyle(color: Theme.of(context).errorColor),
+                ))
             : IconButton(
                 onPressed: () => widget.deltx(widget.transaction.id),
                 color: Theme.of(context).errorColor,

@@ -1,16 +1,16 @@
 import 'dart:io';
+import 'package:expense_manager/models/transactionModel.dart';
+import 'package:expense_manager/providers/trnsactionprovider.dart';
 import 'package:expense_manager/widgets/chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './models/transaction.dart';
 
 void main() {
-  //WidgetsFlutterBinding.ensureInitialized();
-  //SystemChrome.setPreferredOrientations(
-  //  [DeviceOrientation.portraitUp,
-  // DeviceOrientation.portraitDown]);
   runApp(MyApp());
 }
 
@@ -18,47 +18,40 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Personal Expenses',
-      theme: ThemeData(
-        fontFamily: 'QuickSand',
-        appBarTheme: const AppBarTheme(
-            titleTextStyle: TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 20,
-                fontWeight: FontWeight.bold)),
-        primarySwatch: Colors.purple,
-        // ignore: deprecated_member_use
-        accentColor: Colors.amber,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => TransactionProvider(),
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Personal Expenses',
+        theme: ThemeData(
+          fontFamily: 'QuickSand',
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold)),
+          primarySwatch: Colors.green,
+          // ignore: deprecated_member_use
+          accentColor: Colors.amber,
+        ),
+        home: MyHomePage(),
       ),
-      home: MyHomePage(),
     );
   }
 }
 
 // ignore: use_key_in_widget_constructors
 class MyHomePage extends StatefulWidget {
-  // String titleInput;
-  // String amountInput;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-  final List<Transaction> _userTransactions = [
-    /* Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-    ),*/
-  ];
+  final List<Transaction> _userTransactions = [];
   bool _showChart = false;
   @override
   void initState() {
@@ -77,8 +70,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  List<Transaction> get _recentTransactions {
-    return _userTransactions
+  List<TransactionModel> _recentTransactions(BuildContext context) {
+    return context
+        .watch<TransactionProvider>()
+        .tx
         .where((element) => element.date
             .isAfter(DateTime.now().subtract(const Duration(days: 7))))
         .toList();
@@ -108,14 +103,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     showModalBottomSheet(
       context: ctx,
       isScrollControlled: true,
-      builder: (_) {
+      builder: (ctx) {
         return GestureDetector(
           onTap: () {},
           child: NewTransaction(_addNewTransaction),
           behavior: HitTestBehavior.opaque,
         );
       },
-    );
+    ).whenComplete(() {
+      setState(() {
+        debugPrint('setState called');
+      });
+    });
   }
 
   List<Widget> _buildLandscapeView(
@@ -147,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       appBar.preferredSize.height -
                       mediaquery.padding.top) *
                   0.7,
-              child: Chart(_recentTransactions))
+              child: Chart(_recentTransactions(context)))
           : txListWidget
     ];
   }
@@ -160,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 appBar.preferredSize.height -
                 mediaquery.padding.top) *
             0.3,
-        child: Chart(_recentTransactions),
+        child: Chart(_recentTransactions(context)),
       ),
       txListWidget
     ];
@@ -169,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Widget whatPlatFormAppBar() {
     return Platform.isIOS
         ? CupertinoNavigationBar(
-            middle: const Text('Personal Expenses'),
+            middle: const Text('Expense Manager'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -181,7 +180,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             ),
           )
         : AppBar(
-            title: const Text('Personal Expenses'),
+            title: Text(
+              'Expense Manager',
+              style: GoogleFonts.poppins(),
+            ),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.add),
@@ -201,11 +203,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
     // ignore: sized_box_for_whitespace
     final Widget txListWidget = Container(
-        height: (mediaquery.size.height -
-                appBar.preferredSize.height -
-                mediaquery.padding.top) *
-            0.6,
-        child: TransactionList(_userTransactions, delTransaction));
+      height: (mediaquery.size.height -
+              appBar.preferredSize.height -
+              mediaquery.padding.top) *
+          0.7,
+      child: TransactionList(),
+    );
 
     final pageBody = SafeArea(
         child: SingleChildScrollView(

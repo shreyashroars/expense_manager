@@ -1,9 +1,11 @@
 import 'dart:io';
-
+import 'package:expense_manager/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:expense_manager/widgets/adaptive_text_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
@@ -18,6 +20,8 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
+  GetTransaction gt = GetTransaction();
+  var uuid = const Uuid();
   final _titleController = TextEditingController();
   DateTime selectedDate;
   final _amountController = TextEditingController();
@@ -36,8 +40,29 @@ class _NewTransactionState extends State<NewTransaction> {
       enteredAmount,
       selectedDate,
     );
+  }
 
-    Navigator.of(context).pop();
+  postTransaction() async {
+    try {
+      var response = await http
+          .post(Uri.parse('http://10.20.18.72:3000/transaction/posttx'), body: {
+        "title": _titleController.text,
+        "amount": _amountController.text,
+        "date": (selectedDate).toIso8601String(),
+        "id": uuid.v1()
+      });
+      //  debugPrint(response.body);
+      setState(() {
+        gt.gettx();
+      });
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      // debugPrint('nhi hua');
+      print(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   void _presentDatePicker() {
@@ -75,7 +100,7 @@ class _NewTransactionState extends State<NewTransaction> {
               TextField(
                 decoration: const InputDecoration(labelText: 'Title'),
                 controller: _titleController,
-                onSubmitted: (_) => _submitData(),
+                // onSubmitted: (_) => _submitData(),
                 // onChanged: (val) {
                 //   titleInput = val;
                 // },
@@ -84,7 +109,7 @@ class _NewTransactionState extends State<NewTransaction> {
                 decoration: const InputDecoration(labelText: 'Amount'),
                 controller: _amountController,
                 keyboardType: TextInputType.number,
-                onSubmitted: (_) => _submitData(),
+                //  onSubmitted: (_) => _submitData(),
                 // onChanged: (val) => amountInput = val,
               ),
               Row(
@@ -108,7 +133,7 @@ class _NewTransactionState extends State<NewTransaction> {
 
                 //color: Theme.of(context).primaryColor,
                 //textColor: Colors.white,
-                onPressed: _submitData,
+                onPressed: postTransaction,
               ),
             ],
           ),

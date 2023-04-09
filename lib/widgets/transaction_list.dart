@@ -1,19 +1,47 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:expense_manager/providers/trnsactionprovider.dart';
+import 'package:expense_manager/services.dart';
+import 'package:expense_manager/widgets/transactionItem.dart';
 import 'package:flutter/material.dart';
-import './transaction_item.dart';
+import 'package:provider/provider.dart';
 import '../models/transaction.dart';
+import '../models/transactionModel.dart';
 
-class TransactionList extends StatelessWidget {
-  final List<Transaction> transactions;
-  final Function deltx;
-  TransactionList(this.transactions, this.deltx);
+class TransactionList extends StatefulWidget {
+  // final List<Transaction> transactions;
+  // final Function deltx;
+  // TransactionList(this.transactions, this.deltx);
+  TransactionList();
+  @override
+  State<TransactionList> createState() => _TransactionListState();
+}
+
+class _TransactionListState extends State<TransactionList> {
+  bool isloading = true;
+  List<TransactionModel> transaction;
+  @override
+  void initState() {
+    // getData();
+    super.initState();
+  }
+
+  getData() async {
+    GetTransaction gt = GetTransaction();
+    await gt.gettx();
+    transaction = gt.tx;
+    Provider.of<TransactionProvider>(context, listen: false).addtx(gt.tx);
+    setState(() {
+      isloading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return transactions.isEmpty
-        ? LayoutBuilder(builder: (ctx, constraints) {
-            return Column(
+    getData();
+    return Consumer<TransactionProvider>(builder: (context, provider, child) {
+      return provider.tx == null || provider.tx.isEmpty
+          ? Column(
               children: [
                 Text(
                   'No transactions  added yet',
@@ -21,22 +49,20 @@ class TransactionList extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Container(
-                    height: constraints.maxHeight * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: Image.asset(
                       'assets/images/waiting.png',
                       fit: BoxFit.cover,
                     )),
               ],
-            );
-          })
-        : ListView(
-            children: transactions
-                .map((tx) => TransactionItem(
-                      key: ValueKey(tx.id),
-                      transaction: tx,
-                      deltx: deltx,
-                    ))
-                .toList(),
-          );
+            )
+          : ListView.builder(
+              itemCount: provider.tx.length,
+              itemBuilder: (context, index) => TransactionItem1(
+                    amount: provider.tx[index].amount,
+                    date: provider.tx[index].date,
+                    title: provider.tx[index].title,
+                  ));
+    });
   }
 }
