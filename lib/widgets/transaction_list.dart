@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:expense_manager/providers/trnsactionprovider.dart';
 import 'package:expense_manager/services.dart';
 import 'package:expense_manager/widgets/transactionItem.dart';
@@ -36,6 +38,19 @@ class _TransactionListState extends State<TransactionList> {
     });
   }
 
+  void deleteTrans(String id, BuildContext context) async {
+    try {
+      var url = Uri.parse(
+          'https://backend-for-expense-manager-9cr1efa81-shreyashroars.vercel.app/transaction/$id');
+      var response = await http.delete(url);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Transaction deleted')));
+      debugPrint(response.body);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     getData();
@@ -58,11 +73,33 @@ class _TransactionListState extends State<TransactionList> {
             )
           : ListView.builder(
               itemCount: provider.tx.length,
-              itemBuilder: (context, index) => TransactionItem1(
-                    amount: provider.tx[index].amount,
-                    date: provider.tx[index].date,
-                    title: provider.tx[index].title,
-                  ));
+              itemBuilder: (context, index) {
+                final trans = provider.tx[index];
+                return Dismissible(
+                  key: ValueKey(trans.id),
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    padding: EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width * 0.98,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                  ),
+                  onDismissed: (direction) {
+                    deleteTrans(trans.id, context);
+                    setState(() {
+                      provider.tx.removeAt(index);
+                    });
+                  },
+                  child: TransactionItem1(
+                    amount: trans.amount,
+                    date: trans.date,
+                    title: trans.title,
+                  ),
+                );
+              });
     });
   }
 }

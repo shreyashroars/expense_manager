@@ -12,7 +12,7 @@ class GetTransaction {
   Future<List<TransactionModel>> gettx() async {
     try {
       var Url = Uri.parse(
-          'https://backend-for-expense-manager-dn14rlk9p-shreyashroars.vercel.app/transaction/gettx');
+          'https://backend-for-expense-manager-9cr1efa81-shreyashroars.vercel.app/transaction/gettx');
       var response = await http.get(Url);
       //  print(response.body);
       List<dynamic> jsonData = jsonDecode(response.body);
@@ -27,10 +27,23 @@ class GetTransaction {
         tx.add(txModel);
         //  print(tx);
       });
+      tx.sort(mySortComparison);
       return tx;
     } catch (e) {
       // print('hello');
       debugPrint(e.toString());
+    }
+  }
+
+  int mySortComparison(TransactionModel a, TransactionModel b) {
+    DateTime propertyA = a.date;
+    DateTime propertyB = b.date;
+    if (propertyA.isAfter(propertyB)) {
+      return -1;
+    } else if (propertyA.isBefore(propertyB)) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 }
