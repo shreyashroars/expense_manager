@@ -44,13 +44,15 @@ class _NewTransactionState extends State<NewTransaction> {
 
   postTransaction() async {
     try {
-      var response = await http
-          .post(Uri.parse('http://10.20.18.72:3000/transaction/posttx'), body: {
-        "title": _titleController.text,
-        "amount": _amountController.text,
-        "date": (selectedDate).toIso8601String(),
-        "id": uuid.v1()
-      });
+      var response = await http.post(
+          Uri.parse(
+              'https://backend-for-expense-manager-dn14rlk9p-shreyashroars.vercel.app/transaction/posttx'),
+          body: {
+            "title": _titleController.text,
+            "amount": _amountController.text,
+            "date": (selectedDate).toIso8601String(),
+            "id": uuid.v1()
+          });
       //  debugPrint(response.body);
       setState(() {
         gt.gettx();

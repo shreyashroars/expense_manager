@@ -11,7 +11,8 @@ class GetTransaction {
   List<TransactionModel> tx = [];
   Future<List<TransactionModel>> gettx() async {
     try {
-      var Url = Uri.parse('http://10.20.18.72:3000/transaction/gettx');
+      var Url = Uri.parse(
+          'https://backend-for-expense-manager-dn14rlk9p-shreyashroars.vercel.app/transaction/gettx');
       var response = await http.get(Url);
       //  print(response.body);
       List<dynamic> jsonData = jsonDecode(response.body);
