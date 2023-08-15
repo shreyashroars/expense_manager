@@ -62,12 +62,16 @@ class _TransactionListState extends State<TransactionList> {
                   'No transactions  added yet',
                   style: Theme.of(context).textTheme.headline6,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 Container(
                     height: MediaQuery.of(context).size.height * 0.3,
-                    child: Image.asset(
-                      'assets/images/waiting.png',
-                      fit: BoxFit.cover,
+                    child: CircleAvatar(
+                      backgroundColor: Color.fromARGB(255, 251, 215, 107),
+                      radius: 90,
+                      child: Image.asset(
+                        'assets/images/waitingg.gif',
+                        fit: BoxFit.cover,
+                      ),
                     )),
               ],
             )
@@ -93,10 +97,12 @@ class _TransactionListState extends State<TransactionList> {
                       provider.tx.removeAt(index);
                     });
                   },
-                  child: TransactionItem1(
-                    amount: trans.amount,
-                    date: trans.date,
-                    title: trans.title,
+                  child: Center(
+                    child: TransactionItem1(
+                      amount: trans.amount,
+                      date: trans.date,
+                      title: trans.title,
+                    ),
                   ),
                 );
               });

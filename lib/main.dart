@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
                   fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold)),
-          primarySwatch: Colors.green,
+          primarySwatch: Colors.amber,
           // ignore: deprecated_member_use
           accentColor: Colors.amber,
         ),
