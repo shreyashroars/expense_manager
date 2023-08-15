@@ -19,7 +19,7 @@ class TransactionItem1 extends StatelessWidget {
             border: Border.all(width: 1),
             // color: Color.fromARGB(255, 233, 159, 247),
             //color: Color.fromARGB(255, 238, 198, 245),
-            color: Color.fromARGB(255, 173, 239, 175),
+            color: Color.fromARGB(255, 255, 222, 124),
             borderRadius: BorderRadius.circular(20),
           ),
           child:

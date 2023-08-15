@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:expense_manager/secrets.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
@@ -44,8 +45,8 @@ class _NewTransactionState extends State<NewTransaction> {
 
   postTransaction() async {
     try {
-      var response = await http
-          .post(Uri.parse('http://10.20.18.72:3000/transaction/posttx'), body: {
+      var response =
+          await http.post(Uri.parse('${Secrets.apiKey}/posttx'), body: {
         "title": _titleController.text,
         "amount": _amountController.text,
         "date": (selectedDate).toIso8601String(),

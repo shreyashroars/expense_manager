@@ -43,7 +43,8 @@ class Chart extends StatelessWidget {
     return Card(
       shape: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.purple, width: 1)),
+          borderSide:
+              BorderSide(color: Color.fromARGB(255, 204, 154, 243), width: 1)),
       elevation: 10,
       margin: EdgeInsets.all(20),
       child: Padding(
